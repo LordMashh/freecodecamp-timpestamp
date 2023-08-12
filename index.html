@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Microservice</title>
+  <link href="./styles.css" rel="stylesheet">
+  <!-- <link href="./dist/output.css" rel="stylesheet"> -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex justify-center mt-12 bg-gray-100">
+  <div class="bg-white p-6 rounded w-max shadow-md w-96">
+    <h1 class="text-2xl font-semibold text-center mb-4">Timestamp Microservice</h1>
+    <input type="text" id="dateInput" placeholder="Enter Date (YYYY-MM-DD)" class="border rounded px-2 py-1 w-full mb-2 text-center">
+    <button id="submitBtn" class="bg-indigo-600 text-white mt-2 px-4 py-2 rounded mx-auto block hover:bg-indigo-400">Submit</button>
+    <div class="text-2xl font-semibold text-center mb-4" id="result" class="mt-4"></div>
+  </div>
+
+  <script>
+    const submitBtn = document.getElementById('submitBtn');
+    const dateInput = document.getElementById('dateInput');
+    const resultDiv = document.getElementById('result');
+
+    submitBtn.addEventListener('click', async () => {
+      try {
+        const inputValue = dateInput.value;
+        const response = await fetch(`http://localhost:3000/api/${inputValue}`);
+        const data = await response.json();
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+        } else {
+          const utcDate = new Date(data.utc);
+          const localDate = new Date(utcDate.getTime() + (utcDate.getTimezoneOffset() * 60000));
+
+          resultDiv.innerHTML = `<p>Unix Timestamp: ${data.unix}</p><p>UTC: ${data.utc}</p><p>Local Time: ${localDate}</p>`;
+          //resultDiv.innerHTML = `<p>Unix Timestamp: ${data.unix}</p><p>UTC: ${data.utc}</p>`;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+
+</html>

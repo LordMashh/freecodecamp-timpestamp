@@ -26,7 +26,7 @@
     submitBtn.addEventListener('click', async () => {
       try {
         const inputValue = dateInput.value;
-        const response = await fetch(`/api/${inputValue}`);
+        const response = await fetch(`http://localhost:3000/api/${inputValue}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

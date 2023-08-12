@@ -26,7 +26,7 @@
     submitBtn.addEventListener('click', async () => {
       try {
         const inputValue = dateInput.value;
-        const response = await fetch(`api/${inputValue}`);
+        const response = await fetch(`https://lordmashh.github.io/freecodecamp-timpestamp/api/${inputValue}`);
         const data = await response.json();
 
         if (data.error) {

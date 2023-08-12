@@ -26,8 +26,14 @@
     submitBtn.addEventListener('click', async () => {
       try {
         const inputValue = dateInput.value;
-        const response = await fetch(`https://lordmashh.github.io/freecodecamp-timpestamp/api/${inputValue}`);
-        const data = await response.json();
+        const response = await fetch(`/api/${inputValue}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
 
         if (data.error) {
           resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
@@ -38,6 +44,9 @@
           resultDiv.innerHTML = `<p>Unix Timestamp: ${data.unix}</p><p>UTC: ${data.utc}</p><p>Local Time: ${localDate}</p>`;
           //resultDiv.innerHTML = `<p>Unix Timestamp: ${data.unix}</p><p>UTC: ${data.utc}</p>`;
         }
+      } else {
+        throw new Error('Response was not JSON');
+      }
       } catch (error) {
         console.error('Error:', error);
       }
